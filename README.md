@@ -1,6 +1,14 @@
 1.29 versiyonu ile deniyorum. Belki Upgrade ederim. CKA sınavında kubernetes kurdurup upgrade yaptırıyorlarmış.
 --------------------------------------------------------------------------------------------
 https://v1-29.docs.kubernetes.io/docs/setup/production-environment/container-runtimes/
+
+Sunucuya gui yükledim. 
+
+sudo apt install slim
+
+sudo apt install ubuntu-desktop
+https://phoenixnap.com/kb/how-to-install-a-gui-on-ubuntu
+
 -------------------------------------------------------------------------------------------
 Container runtime için ön gereksinim konfigurasyonu
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -32,7 +40,33 @@ sysctl net.bridge.bridge-nf-call-iptables net.bridge.bridge-nf-call-ip6tables ne
 Swap disable ;
 vi /etc/fstab
 sudo swapoff -a
+# Confirm setting is correct
+sudo mount -a
+free -h
 --------------------------------------------------------------------------------------------
+# Reload configs
+sudo sysctl --system
+# Install required packages
+sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+# Add Docker repo
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+# Install containerd
+sudo apt update
+sudo apt install -y containerd.io
+# Configure containerd and start service
+sudo su -
+mkdir -p /etc/containerd
+containerd config default>/etc/containerd/config.toml
+# restart containerd
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+sudo systemctl status containerd
+# To use the systemd cgroup driver, set plugins.cri.systemd_cgroup = true 
+cat /etc/containerd/config.toml | grep SystemdCgroup
+sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+-------------------------------------------------------------------------------------------
+Alternatif ; ; 
 Containerd kurulumu ;  https://github.com/containerd/containerd/blob/main/docs/getting-started.md
 From APT | - >  https://docs.docker.com/engine/install/ubuntu/
 sudo apt-get install containerd.io 
@@ -62,3 +96,13 @@ sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
 sudo systemctl enable --now kubelet
 --------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
