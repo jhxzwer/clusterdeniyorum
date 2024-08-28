@@ -1,4 +1,4 @@
-1.29 versiyonu ile deniyorum. Belki Upgrade ederim. CKA sınavında kubernetes kurdurup upgrade yaptırıyorlarmış.
+1.29 versiyonu ile kurulum gerçekleştirdim.
 --------------------------------------------------------------------------------------------
 https://v1-29.docs.kubernetes.io/docs/setup/production-environment/container-runtimes/
 
