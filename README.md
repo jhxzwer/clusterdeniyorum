@@ -1,13 +1,7 @@
-1.29 versiyonu ile kurulum gerçekleştirdim.
+1.29 versiyonu ile kurulum gerçekleştirdim. İlerleyen dönemlerde upgrade işlemi gerçekleştirmek için alt versiyon kullandım.
 --------------------------------------------------------------------------------------------
 https://v1-29.docs.kubernetes.io/docs/setup/production-environment/container-runtimes/
 
-Sunucuya gui yükledim. 
-
-sudo apt install slim
-
-sudo apt install ubuntu-desktop
-https://phoenixnap.com/kb/how-to-install-a-gui-on-ubuntu
 
 -------------------------------------------------------------------------------------------
 Container runtime için ön gereksinim konfigurasyonu
@@ -66,7 +60,6 @@ sudo systemctl status containerd
 cat /etc/containerd/config.toml | grep SystemdCgroup
 sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
 -------------------------------------------------------------------------------------------
-Alternatif ; ; 
 Containerd kurulumu ;  https://github.com/containerd/containerd/blob/main/docs/getting-started.md
 From APT | - >  https://docs.docker.com/engine/install/ubuntu/
 sudo apt-get install containerd.io 
