@@ -1,0 +1,57 @@
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+
+namespace/kubernetes-dashboard created
+serviceaccount/kubernetes-dashboard created
+service/kubernetes-dashboard created
+secret/kubernetes-dashboard-certs created
+secret/kubernetes-dashboard-csrf created
+secret/kubernetes-dashboard-key-holder created
+configmap/kubernetes-dashboard-settings created
+role.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard created
+rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+deployment.apps/kubernetes-dashboard created
+service/dashboard-metrics-scraper created
+deployment.apps/dashboard-metrics-scraper created
+
+--
+Dashboard erişimi için bir admin user create ediyoruz.
+
+kubectl create serviceaccount -n kubernetes-dashboard admin-user
+serviceaccount/admin-user created
+
+vi rbac.yml
+# create new
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kubernetes-dashboard
+
+--
+
+kubectl apply -f rbac.yml
+clusterrolebinding.rbac.authorization.k8s.io/admin-user created
+
+Oluşturduğumuz admin user için bir token generate ediyoruz.
+
+kubectl -n kubernetes-dashboard create token admin-user
+
+--
+Dashboard'u başlatabiliriz.
+
+kubectl proxy
+Starting to serve on 127.0.0.1:8001
+
+Eğer isterseniz port forward yaparak farklı bir client üzerinden de erişim sağlayabilirsiniz.
+
+kubectl port-forward -n kubernetes-dashboard service/kubernetes-dashboard --address 0.0.0.0 10443:443
+Forwarding from 0.0.0.0:10443 -> 8443
