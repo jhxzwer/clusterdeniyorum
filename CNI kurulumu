@@ -1,1 +1,30 @@
+Kubeadm ile cluster kurulumu tamamlandıktan sonra containerlarımızın birbirleriyle haberleşebilmesi için bir CNI kurulumu yapmamız gerekiyor, bu adımda Calicoyu tercih ettim.
 
+https://docs.tigera.io/calico/latest/getting-started/kubernetes/self-managed-onprem/onpremises
+
+Install the operator on your cluster.
+
+kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
+
+Download the custom resources necessary to configure Calico.
+
+curl https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/custom-resources.yaml -O
+
+If you are using pod CIDR 192.168.0.0/16, skip to the next step. If you are using a different pod CIDR with kubeadm, no changes are required — Calico will automatically detect the CIDR based on the running configuration. For other platforms, make sure you uncomment the CALICO_IPV4POOL_CIDR variable in the manifest and set it to the same value as your chosen pod CIDR.
+
+Calico kurulumunu tamamlamadan önce yukarıdaki not göz önünde bulundurulmalı. Cluster'ı init ederken belirttiğimiz CIDR default değerin dışında ise .yaml uzantılı dosya içerisinde CIDR bloğu düzenlenmelidir.
+
+kubectl create -f custom-resources.yaml
+
+watch kubectl get pods -n calico-system
+
+NAME                                       READY   STATUS    RESTARTS   AGE
+calico-kube-controllers-7c465f4dfd-6g8ml   1/1     Running   0          40h
+calico-node-4pvvz                          1/1     Running   0          40h
+calico-node-q87pf                          1/1     Running   0          30h
+calico-node-r5l89                          1/1     Running   0          40h
+calico-typha-7b869cc7c4-5zhqr              1/1     Running   0          40h
+calico-typha-7b869cc7c4-mpfln              1/1     Running   0          30h
+csi-node-driver-5mxdz                      2/2     Running   0          40h
+csi-node-driver-nc2hj                      2/2     Running   0          30h
+csi-node-driver-nhb4z                      2/2     Running   0          40h
