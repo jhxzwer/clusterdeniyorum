@@ -115,7 +115,35 @@ sudo systemctl enable --now kubelet
 sudo kubeadm init --control-plane-endpoint="kubernetes.maraz:6443" --apiserver-advertise-address=192.168.201.10 --node-name master --pod-network-cidr=10.10.0.0/16
 --
 
-Kontrol ettiğimizde node'larımızı aşağıdaki gibi görüntüleyebiliriz. CNI kurulumu yapılmadığı için not ready olarak kalabilir.
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+Alternatively, if you are the root user, you can run:
+
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+You can now join any number of control-plane nodes by copying certificate authorities
+and service account keys on each node and then running the following as root:
+
+  kubeadm join kubernetes.maraz:6443 --token exxokr.qs5dtyprqyz0dm8w \
+        --discovery-token-ca-cert-hash sha256:afc6e5c4b405c038ebde51def33f2f596d3e6a26e7a2e7cf9e00121ed70ce14e \
+        --control-plane
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join kubernetes.maraz:6443 --token exxokr.qs5dtyprqyz0dm8w \
+        --discovery-token-ca-cert-hash sha256:afc6e5c4b405c038ebde51def33f2f596d3e6a26e7a2e7cf9e00121ed70ce14e
+
+Kontrol ettiğimizde node'larımızı aşağıdaki gibi görüntüleyebiliriz. CNI kurulumu yapılmadığı için not ready olarak listelenebilir.
 
 root@master# kubectl get nodes
 NAME     STATUS   ROLES           AGE   VERSION
